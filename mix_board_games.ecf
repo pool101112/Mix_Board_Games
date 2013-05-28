@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-10-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-10-0 http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd" name="mix_board_games" uuid="93BB53E1-F8DA-4A9B-BF55-E77BF343F155">
+	<target name="mix_board_games">
+		<root class="GAME" feature="make"/>
+		<option warning="true" is_attached_by_default="false" syntax="transitional">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<external_include location="..\..\..\..\librairies\SDL_Image-1.2.12\include"/>
+		<external_include location="..\..\..\..\librairies\SDL-1.2.14\include\SDL"/>
+		<external_library location="..\..\..\librairies\SDL-1.2.14\lib\libSDL.dll.a"/>
+		<external_library location="..\..\..\librairies\SDL_Image-1.2.12\lib\x86\SDL_image.lib"/>
+		<precompile name="base_pre" location="$ISE_PRECOMP\base.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<cluster name="mix_board_games" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/CVS$</exclude>
+				<exclude>/.svn$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>
