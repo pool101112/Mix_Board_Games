@@ -68,6 +68,16 @@ feature {NONE} -- Application d'une image
 			end
 		end
 
+	apply_transparancy (a_value:NATURAL_8)
+	-- Applique une transparence de `value'
+		require
+			a_value_is_at_least_0: a_value >= 0
+		do
+			if {SDL_IMAGE_WRAPPER}.SDL_SetAlpha (surface_ptr, {SDL_IMAGE_WRAPPER}.SDL_SRCALPHA | {SDL_IMAGE_WRAPPER}.SDL_RLEACCEL, a_value) < 0 then
+				set_error_flag
+			end
+		end
+
 feature {NONE} -- Changement des variables (Set)
 
 	set_x (a_x:INTEGER_16)

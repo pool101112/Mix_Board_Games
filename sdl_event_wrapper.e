@@ -17,6 +17,16 @@ feature {GAME} -- Gestion des évènements
 			"SDL_PollEvent"
 		end
 
+feature {GAME} -- Temps
+
+	frozen SDL_Delay (a_ms:NATURAL_32)
+	-- Met l'application en attente pendant `a_ms' millisecondes
+		external
+			"C (Uint32) | <SDL.h>"
+		alias
+			"SDL_Delay"
+		end
+
 
 feature {GAME} -- Size of
 

@@ -33,7 +33,7 @@ feature {GAME} -- Initialisations et fermetures
 			"SDL_SetVideoMode"
 		end
 
-feature {IMAGE, GAME} -- Chargement et déchargement des images
+feature {IMAGE} -- Chargement et déchargement des images
 
 	frozen IMG_Load (file:POINTER):POINTER
 	-- Pointeur de l'image créée
@@ -67,6 +67,16 @@ feature {IMAGE, GAME} -- Affichage
 			"C (SDL_Surface *):int | <SDL.h>"
 		alias
 			"SDL_Flip"
+		end
+
+feature {IMAGE} -- Transparence
+
+	frozen SDL_SetAlpha (surface:POINTER; flags:NATURAL_32; alpha:NATURAL_8):INTEGER
+	-- Valeur alpha pour appliquer une transparance sur la surface
+		external
+			"C (SDL_Surface *, Uint32, Uint8):int | <SDL.h>"
+		alias
+			"SDL_SetAlpha"
 		end
 
 feature {IMAGE} -- SizeOf
@@ -131,7 +141,7 @@ feature {IMAGE} -- Sets
 		end
 
 
-feature {GAME} -- Constantes
+feature {GAME, IMAGE} -- Constantes
 
 	frozen SDL_INIT_VIDEO:NATURAL_32
 	-- Valeur de la constante SDL_INIT_VIDEO
@@ -158,6 +168,24 @@ feature {GAME} -- Constantes
 			"C inline use <SDL.h>"
 		alias
 			"SDL_FULLSCREEN"
+		end
+
+	frozen SDL_SRCALPHA:NATURAL_32
+	-- Valeur de la constante SDL_SRCALPHA
+	-- Cette constante est utilisée pour que les valeurs alphas ne soient pas ignorées
+		external
+			"C inline use <SDL.h>"
+		alias
+			"SDL_SRCALPHA"
+		end
+
+	frozen SDL_RLEACCEL:NATURAL_32
+	-- Valeur de la constante SDL_RLEACCEL
+	-- Cette constante est utilisée pour ne pas subir de ralentissement lors du blitsurface
+		external
+			"C inline use <SDL.h>"
+		alias
+			"SDL_RLEACCEL"
 		end
 
 end

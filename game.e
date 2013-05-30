@@ -39,7 +39,7 @@ feature {NONE} -- Menus
 			l_quit:BOOLEAN
 
 			l_background:BACKGROUND
-			l_chess_button, l_checkers_button, l_reversi_button, l_profile_bubble:MENU
+			l_chess_button, l_checkers_button, l_reversi_button, l_profile_bubble:MENU_ELEMENT
 		do
 			create l_string_list.make (1)
 			l_string_list.extend ("ressources/images/main_menu.png")
@@ -76,11 +76,11 @@ feature {NONE} -- Menus
 			l_profile_bubble.destroy
 		end
 
-	create_menu_object (a_screen:POINTER; a_path:STRING; a_x, a_y:INTEGER_16):MENU
+	create_menu_object (a_screen:POINTER; a_path:STRING; a_x, a_y:INTEGER_16):MENU_ELEMENT
 	-- Objet de type MENU
 		local
 			l_string_list:ARRAYED_LIST[STRING]
-			l_menu:MENU
+			l_menu:MENU_ELEMENT
 		do
 			create l_string_list.make (1)
 			l_string_list.extend (a_path)
@@ -122,6 +122,7 @@ feature {NONE} -- Fonctions des images de la librairie SDL
 			if {SDL_IMAGE_WRAPPER}.SDL_Flip (a_screen) < 0 then
 				print ("Erreur lors du rafraîchissement de l'écran")
 			end
+			{SDL_EVENT_WRAPPER}.SDL_Delay (12)
 		end
 
 feature {NONE} -- Fonctions des événements de la librairie SDL

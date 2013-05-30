@@ -5,7 +5,7 @@ note
 	revision: "$Revision$"
 
 class
-	MENU
+	MENU_ELEMENT
 
 inherit
 	IMAGE
@@ -51,9 +51,18 @@ feature {NONE} -- Chargement des images
 
 feature {GAME} -- Affichage
 
+	set_transparancy (a_value:NATURAL_8)
+	-- Applique la transparence
+		require
+			a_value_is_at_least_0: a_value >= 0
+		do
+			alpha_value := a_value
+		end
+
 	apply
 	-- Applique l'image à `screen'
 		do
+			apply_transparancy (alpha_value)
 			apply_surface_to_screen
 		end
 
@@ -100,4 +109,9 @@ feature {GAME} -- Coordonnées de l'emplacement
 			set_x (a_x)
 			set_y (a_y)
 		end
+
+feature {NONE} -- Variables de classe
+
+	alpha_value:NATURAL_8
+	-- Valeur alpha utilisée lors de la transparence
 end
