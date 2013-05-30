@@ -22,6 +22,7 @@ feature {GAME} -- Constructeur
 			a_path_list_is_not_empty: not a_path_list.is_empty
 		do
 			screen := a_screen
+			create_surface_area
 			load_image_list (a_path_list)
 			set_surface_ptr (1)
 			set_x (0)
@@ -69,5 +70,5 @@ feature {GAME} -- Destructeur
 		do
 			{SDL_IMAGE_WRAPPER}.SDL_FreeSurface (surface_ptr)
 		end
-		
+
 end

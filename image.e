@@ -7,7 +7,25 @@ note
 deferred class
 	IMAGE
 
-feature {NONE} -- Chargement des images
+feature {NONE} -- Création des variables
+
+	create_list (a_length:INTEGER_16)
+	-- Créé une liste de taille `a_length' contenant les pointeurs des images
+		require
+			a_length_is_above_0: a_length > 0
+		do
+			create {ARRAYED_LIST[POINTER]} surface_ptr_list.make (a_length)
+		end
+
+	create_surface_area
+	-- Créé un SDL_Rect pour la surface de l'image à afficher
+		do
+			surface_area := memory_manager.memory_alloc ({SDL_IMAGE_WRAPPER}.sizeof_SDL_Rect)
+			ensure
+				surface_area_is_not_null: not surface_area.is_default_pointer
+		end
+
+feature {NONE} -- Chargement et déchargement des images
 
 	load_image_list (a_path_list:LIST[STRING])
 	-- Lance le chargement des images de la liste `a_path_list'
@@ -18,12 +36,6 @@ feature {NONE} -- Chargement des images
 
 	free_surfaces
 		deferred
-		end
-
-	create_list (a_length:INTEGER_16)
-	-- Créé une liste de taille `a_length' contenant les pointeurs des images
-		do
-			create {ARRAYED_LIST[POINTER]} surface_ptr_list.make (a_length)
 		end
 
 	load_image (a_path:STRING)
@@ -42,9 +54,16 @@ feature {NONE} -- Chargement des images
 feature {NONE} -- Application d'une image
 
 	apply_surface_to_screen
-	-- Applique l'image `surface_ptr' sur la surface `screen'
+	-- Applique l'image `surface_ptr' sur la surface `screen' selon `surface_area'
+		require
+			surface_area_is_not_null: not surface_area.is_default_pointer
 		do
-			if {SDL_IMAGE_WRAPPER}.SDL_BlitSurface(surface_ptr, create{POINTER}, screen, create{POINTER}) < 0 then
+			{SDL_IMAGE_WRAPPER}.set_surface_area_x(surface_area, x)
+			{SDL_IMAGE_WRAPPER}.set_surface_area_y(surface_area, y)
+			{SDL_IMAGE_WRAPPER}.set_surface_area_w(surface_area, w)
+			{SDL_IMAGE_WRAPPER}.set_surface_area_h(surface_area, h)
+
+			if {SDL_IMAGE_WRAPPER}.SDL_BlitSurface(surface_ptr, create{POINTER}, screen, surface_area) < 0 then
 				set_error_flag
 			end
 		end
@@ -73,6 +92,8 @@ feature {NONE} -- Changement des variables (Set)
 			surface_ptr_is_not_null: not surface_ptr.is_default_pointer
 		do
 			w := {SDL_IMAGE_WRAPPER}.get_surface_width (surface_ptr)
+		ensure
+			w_is_above_0: w > 0
 		end
 
 	set_h
@@ -81,6 +102,8 @@ feature {NONE} -- Changement des variables (Set)
 			surface_ptr_is_not_null: not surface_ptr.is_default_pointer
 		do
 			h := {SDL_IMAGE_WRAPPER}.get_surface_height (surface_ptr)
+		ensure
+			h_is_above_0: h > 0
 		end
 
 	set_surface_ptr (a_index:INTEGER_8)
@@ -105,6 +128,10 @@ feature {NONE} -- Erreur
 
 feature {NONE} -- Variables de classe
 
+	memory_manager:POINTER
+	-- Pointeur de la gestion de mémoire
+	surface_area:POINTER
+	-- Pointeur de la partie ciblée d'une surface
 	surface_ptr:POINTER
 	-- Pointeur d'une surface
 	surface_ptr_list:LIST[POINTER]
@@ -115,9 +142,9 @@ feature {NONE} -- Variables de classe
 	-- Coordonnée horizontale de l'image
 	y:INTEGER_16 assign set_y
 	-- Coordonnée verticale de l'image
-	w:INTEGER_32
+	w:INTEGER_16
 	-- Largeur de l'image
-	h:INTEGER_32
+	h:INTEGER_16
 	-- Hauteur de l'image
 	is_error:BOOLEAN
 	-- Confirmation d'une erreur

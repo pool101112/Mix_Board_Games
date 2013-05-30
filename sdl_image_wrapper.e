@@ -69,9 +69,18 @@ feature {IMAGE, GAME} -- Affichage
 			"SDL_Flip"
 		end
 
+feature {IMAGE} -- SizeOf
+
+	frozen sizeof_SDL_Rect:INTEGER
+	-- Espace nécessaire pour un SDL_Rect
+		external
+			"C inline use <SDL.h>"
+		alias
+			"sizeof(SDL_Rect)"
+		end
 feature {IMAGE} -- Gets
 
-	frozen get_surface_width (SDL_Surface:POINTER):INTEGER
+	frozen get_surface_width (SDL_Surface:POINTER):INTEGER_16
 	-- Largeur de la surface
 		external
 			"C [struct <SDL.h>] (struct SDL_Surface):int"
@@ -79,13 +88,48 @@ feature {IMAGE} -- Gets
 			"w"
 		end
 
-	frozen get_surface_height (SDL_Surface:POINTER):INTEGER
+	frozen get_surface_height (SDL_Surface:POINTER):INTEGER_16
 	-- Hauteur de la surface
 		external
 			"C [struct <SDL.h>] (struct SDL_Surface):int"
 		alias
 			"h"
 		end
+
+feature {IMAGE} -- Sets
+
+	frozen set_surface_area_x (SDL_Rect:POINTER; value:INTEGER_16)
+	-- Change la coordonnée horizontale d'un SDL_Rect
+		external
+			"C [struct <SDL.h>] (struct SDL_Rect, Sint16)"
+		alias
+			"x"
+		end
+
+	frozen set_surface_area_y (SDL_Rect:POINTER; value:INTEGER_16)
+	-- Change la coordonnée verticale d'un SDL_Rect
+		external
+			"C [struct <SDL.h>] (struct SDL_Rect, Sint16)"
+		alias
+			"y"
+		end
+
+	frozen set_surface_area_w (SDL_Rect:POINTER; value:INTEGER_16)
+	-- Change la largeur d'un SDL_Rect
+		external
+			"C [struct <SDL.h>] (struct SDL_Rect, Sint16)"
+		alias
+			"w"
+		end
+
+	frozen set_surface_area_h (SDL_Rect:POINTER; value:INTEGER_16)
+	-- Change la hauteur d'un SDL_Rect
+		external
+			"C [struct <SDL.h>] (struct SDL_Rect, Sint16)"
+		alias
+			"h"
+		end
+
 
 feature {GAME} -- Constantes
 

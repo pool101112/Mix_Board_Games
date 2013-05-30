@@ -17,6 +17,9 @@ feature {GAME} -- Gestion des évènements
 			"SDL_PollEvent"
 		end
 
+
+feature {GAME} -- Size of
+
 	frozen sizeof_SDL_Event:INTEGER
 	-- Espace nécessaire pour un SDL_Event
 		external
@@ -25,6 +28,8 @@ feature {GAME} -- Gestion des évènements
 			"sizeof(SDL_Event)"
 		end
 
+
+feature {GAME} -- Gets
 	frozen get_SDL_Event_type (SDL_Event:POINTER):NATURAL_8
 	-- Valeur du type d'événement
 		external

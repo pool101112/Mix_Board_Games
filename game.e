@@ -39,20 +39,16 @@ feature {NONE} -- Menus
 			l_quit:BOOLEAN
 
 			l_background:BACKGROUND
-			l_chess_button, l_checkers_button, l_reversi_button:MENU
+			l_chess_button, l_checkers_button, l_reversi_button, l_profile_bubble:MENU
 		do
 			create l_string_list.make (1)
 			l_string_list.extend ("ressources/images/main_menu.png")
 			create l_background.make (a_screen, l_string_list)
-			l_string_list.wipe_out
-			l_string_list.extend ("ressources/images/bouton_echecs.png")
-			create l_chess_button.make (a_screen, l_string_list, 265, 200)
-			l_string_list.wipe_out
-			l_string_list.extend ("ressources/images/bouton_dames.png")
-			create l_checkers_button.make (a_screen, l_string_list, 265, 300)
-			l_string_list.wipe_out
-			l_string_list.extend ("ressources/images/bouton_othello.png")
-			create l_reversi_button.make (a_screen, l_string_list, 265, 400)
+			l_chess_button := create_menu_object (a_screen, "ressources/images/bouton_echecs.png", 265, 200)
+			l_checkers_button := create_menu_object (a_screen, "ressources/images/bouton_dames.png", 265, 300)
+			l_reversi_button := create_menu_object (a_screen, "ressources/images/bouton_othello.png", 265, 400)
+			l_profile_bubble := create_menu_object (a_screen, "ressources/images/profile_bubble.png", 0, 0)
+			l_profile_bubble.change_position(((800 // 2) - (l_profile_bubble.width // 2)).as_integer_16, (600 - l_profile_bubble.height).as_integer_16)
 			l_event_ptr := sizeof_event_ptr
 			from
 			until
@@ -70,12 +66,26 @@ feature {NONE} -- Menus
 				l_chess_button.apply
 				l_checkers_button.apply
 				l_reversi_button.apply
+				l_profile_bubble.apply
 				refresh_screen (a_screen)
 			end
 			l_background.destroy
 			l_chess_button.destroy
 			l_checkers_button.destroy
 			l_reversi_button.destroy
+			l_profile_bubble.destroy
+		end
+
+	create_menu_object (a_screen:POINTER; a_path:STRING; a_x, a_y:INTEGER_16):MENU
+	-- Objet de type MENU
+		local
+			l_string_list:ARRAYED_LIST[STRING]
+			l_menu:MENU
+		do
+			create l_string_list.make (1)
+			l_string_list.extend (a_path)
+			create l_menu.make (a_screen, l_string_list, a_x, a_y)
+			result := l_menu
 		end
 
 feature {NONE} -- Fonctions autres de la librairie SDL (Quit, etc.)
@@ -136,8 +146,8 @@ feature {NONE} -- Fonctions des événements de la librairie SDL
 			l_memory_manager:POINTER
 		do
 			result := l_memory_manager.memory_alloc({SDL_EVENT_WRAPPER}.sizeof_SDL_Event)
-			ensure
-				result_is_not_null: not result.is_default_pointer
+		ensure
+			result_is_not_null: not result.is_default_pointer
 		end
 
 end
