@@ -2,8 +2,8 @@ note
 	description: "[Gestion principale du jeu. Cette classe appelle la plupart des autres classes pour faire fonctionner le jeu.]"
 	author: "Marc-André Douville Auger"
 	copyright: "Copyright (c) 2013, Marc-André Douville Auger"
-	date: "30 Mai 2013"
-	revision: "0.13.05.30"
+	date: "31 Mai 2013"
+	revision: "0.13.05.31"
 
 class
 	GAME
@@ -73,6 +73,7 @@ feature {NONE} -- Menus
 						end
 					elseif over_button (l_reversi_button, l_event_ptr) then
 						if click (l_event_ptr) then
+							l_background.apply
 							reversi_game (a_screen, l_profile_name)
 						end
 					end
@@ -120,14 +121,15 @@ feature {NONE} -- Jeux
 
 	reversi_game (a_screen:POINTER; a_profile_name:STRING)
 		local
-			l_game_board:MENU_ELEMENT
+			l_game_board:BOARD
 			l_string_list:ARRAYED_LIST[STRING]
 			l_quit:BOOLEAN
 			l_event_ptr:POINTER
+			l_bg:BACKGROUND
 		do
 			create l_string_list.make (1)
-			l_string_list.extend ("ressources/images/board.png")
-			create l_game_board.make (a_screen, l_string_list, 100, 0)
+			l_string_list.extend ("ressources/images/board2.png")
+			create l_game_board.make (a_screen, l_string_list, 200, 150)
 			l_event_ptr := sizeof_event_ptr
 			from
 			until

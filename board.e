@@ -30,6 +30,7 @@ feature {GAME} -- Constructeur
 			set_h
 			set_x (a_x)
 			set_y (a_y)
+			alpha_value := 255
 		end
 
 feature {NONE} -- Chargement des images
