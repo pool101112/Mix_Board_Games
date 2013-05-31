@@ -1,11 +1,11 @@
 note
-	description: "Summary description for {CHESS_PIECE}."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description: "[Cette classe est utilisée pour la gestion des pièces du jeu d'échecs.]"
+	author: "Marc-André Douville Auger"
+	copyright: "Copyright (c) 2013, Marc-André Douville Auger"
+	date: ""
+	revision: ""
 
-class
-	CHESS_PIECE
+class
+	CHESS_PIECE
 
-end
-
+end

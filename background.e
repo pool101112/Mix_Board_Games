@@ -1,8 +1,9 @@
 note
-	description: "Summary description for {BACKGROUND}."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description: "[Cette classe sert à gérer et afficher l'arrière-plan.]"
+	author: "Marc-André Douville Auger"
+	copyright: "Copyright (c) 2013, Marc-André Douville Auger"
+	date: "30 Mai 2013"
+	revision: "0.13.05.30"
 
 class
 	BACKGROUND

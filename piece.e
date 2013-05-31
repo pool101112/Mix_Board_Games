@@ -1,8 +1,9 @@
 note
-	description: "Summary description for {PIECE}."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description: "[Cette classe abstraite est utilisée pour la gestion des pièces en général.]"
+	author: "Marc-André Douville Auger"
+	copyright: "Copyright (c) 2013, Marc-André Douville Auger"
+	date: ""
+	revision: ""
 
 deferred class
 	PIECE

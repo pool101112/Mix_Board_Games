@@ -1,11 +1,11 @@
 note
-	description: "Summary description for {SDL_TTF_WRAPPER}."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description: "[Cette classe est un wrapper englobant des fonctions de la librairie SDL 1.2 servant à la gestion du texte.]"
+	author: "Marc-André Douville Auger"
+	copyright: "Copyright (c) 2013, Marc-André Douville Auger"
+	date: ""
+	revision: ""
 
-class
-	SDL_TTF_WRAPPER
+class
+	SDL_TTF_WRAPPER
 
-end
-
+end

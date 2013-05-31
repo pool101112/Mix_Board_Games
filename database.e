@@ -1,11 +1,11 @@
 note
-	description: "Summary description for {DATABASE}."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description: "[Cette classe est utilisée pour la gestion de la base de données.]"
+	author: "Marc-André Douville Auger"
+	copyright: "Copyright (c) 2013, Marc-André Douville Auger"
+	date: ""
+	revision: ""
 
-class
-	DATABASE
+class
+	DATABASE
 
-end
-
+end

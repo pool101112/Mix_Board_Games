@@ -1,11 +1,11 @@
 note
-	description: "Summary description for {NET_SERVER}."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description: "[Cette classe sert à la gestion du serveur.]"
+	author: "Marc-André Douville Auger"
+	copyright: "Copyright (c) 2013, Marc-André Douville Auger"
+	date: ""
+	revision: ""
 
-class
-	NET_SERVER
+class
+	NET_SERVER
 
-end
-
+end

@@ -1,8 +1,9 @@
 note
-	description: "Summary description for {MENU}."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description: "[Gestion des éléments du menu. Cette classe sert à afficher les différent éléments pour les menus.]"
+	author: "Marc-André Douville Auger"
+	copyright: "Copyright (c) 2013, Marc-André Douville Auger"
+	date: "30 Mai 2013"
+	revision: "0.13.05.30"
 
 class
 	MENU_ELEMENT
@@ -29,6 +30,7 @@ feature {GAME} -- Constructeur
 			set_h
 			set_x (a_x)
 			set_y (a_y)
+			alpha_value := 255
 		end
 
 feature {NONE} -- Chargement des images
@@ -78,24 +80,6 @@ feature {GAME} -- Destructeur
 	-- Libère les surfaces
 		do
 			{SDL_IMAGE_WRAPPER}.SDL_FreeSurface (surface_ptr)
-		end
-
-feature {GAME} -- Dimensions
-
-	width:INTEGER_16
-	-- Largeur de l'élément `current'
-		do
-			result := w
-		ensure
-			result_is_equal_to_w: result = w
-		end
-
-	height:INTEGER_16
-	-- Hauteur de l'élément `current'
-		do
-			result := h
-		ensure
-			result_is_equal_to_h: result = h
 		end
 
 feature {GAME} -- Coordonnées de l'emplacement

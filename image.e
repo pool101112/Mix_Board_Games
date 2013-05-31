@@ -1,8 +1,9 @@
 note
-	description: "Summary description for {IMAGE}."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description: "[Cette classe abstraite est utilisée pour la gestion des images.]"
+	author: "Marc-André Douville Auger"
+	copyright: "Copyright (c) 2013, Marc-André Douville Auger"
+	date: ""
+	revision: ""
 
 deferred class
 	IMAGE
@@ -136,7 +137,7 @@ feature {NONE} -- Erreur
 				is_error_true: is_error = true
 		end
 
-feature {NONE} -- Variables de classe
+feature {GAME} -- Variables de classe
 
 	memory_manager:POINTER
 	-- Pointeur de la gestion de mémoire

@@ -1,29 +1,14 @@
 note
-	description: "Summary description for {SDL_IMAGE_WRAPPER}."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description: "[Cette classe est un wrapper englobant des fonctions de la librairie SDL 1.2 servant à la gestion des images.]"
+	author: "Marc-André Douville Auger"
+	copyright: "Copyright (c) 2013, Marc-André Douville Auger"
+	date: "30 Mai 2013"
+	revision: "0.13.05.30"
 
 class
 	SDL_IMAGE_WRAPPER
 
-feature {GAME} -- Initialisations et fermetures
-
-	frozen SDL_Init (flags:NATURAL_32):INTEGER
-	-- Valeur indiquant si une erreur est survenue lors de l'initialisation
-		external
-			"C (Uint32):int | <SDL.h>"
-		alias
-			"SDL_Init"
-		end
-
-	frozen SDL_Quit ()
-	-- Ferme tous les sous-systèmes
-		external
-			"C | <SDL.h>"
-		alias
-			"SDL_Quit"
-		end
+feature {GAME} -- Initialisation et fermeture
 
 	frozen SDL_SetVideoMode (width, height, bitsperpixel:INTEGER; flags:NATURAL_32):POINTER
 	-- Initialise l'écran

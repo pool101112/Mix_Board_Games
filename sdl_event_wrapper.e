@@ -1,8 +1,9 @@
 note
-	description: "Summary description for {SDL_EVENT_WRAPPER}."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description: "[Cette classe est un wrapper englobant des fonctions de la librairie SDL 1.2 servant à la gestion des événements.]"
+	author: "Marc-André Douville Auger"
+	copyright: "Copyright (c) 2013, Marc-André Douville Auger"
+	date: "30 Mai 2013"
+	revision: "0.13.05.30"
 
 class
 	SDL_EVENT_WRAPPER
@@ -15,16 +16,6 @@ feature {GAME} -- Gestion des évènements
 			"C (SDL_Event *):int | <SDL.h>"
 		alias
 			"SDL_PollEvent"
-		end
-
-feature {GAME} -- Temps
-
-	frozen SDL_Delay (a_ms:NATURAL_32)
-	-- Met l'application en attente pendant `a_ms' millisecondes
-		external
-			"C (Uint32) | <SDL.h>"
-		alias
-			"SDL_Delay"
 		end
 
 
@@ -58,6 +49,22 @@ feature {GAME} -- Événements de la souris
 			"button"
 		end
 
+	frozen get_mouse_x (SDL_MouseButtonEvent:POINTER):NATURAL_16
+	-- Coordonnée horizontale de la souris
+		external
+			"C [struct <SDL.h>] (SDL_MouseButtonEvent):Uint16 *"
+		alias
+			"x"
+		end
+
+	frozen get_mouse_y (SDL_MouseButtonEvent:POINTER):NATURAL_16
+	-- Coordonnée verticale de la souris
+		external
+			"C [struct <SDL.h>] (SDL_MouseButtonEvent):Uint16 *"
+		alias
+			"y"
+		end
+
 feature {GAME} -- Constantes de la souris
 
 	frozen SDL_MOUSEBUTTONDOWN:NATURAL_8
@@ -82,6 +89,16 @@ feature {GAME} -- Constantes de la souris
 			"C inline use <SDL.h>"
 		alias
 			"SDL_BUTTON_RIGHT"
+		end
+
+feature {GAME} -- Constantes générales
+
+	frozen SDL_QUIT:NATURAL_8
+	-- Valeur de l'événement de SDL_QUIT
+		external
+			"C inline use <SDL.h>"
+		alias
+			"SDL_QUIT"
 		end
 
 end

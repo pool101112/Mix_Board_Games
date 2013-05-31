@@ -1,11 +1,11 @@
 note
-	description: "Summary description for {NET_CLIENT}."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description: "[Cette classe sert à la gestion du client.]"
+	author: "Marc-André Douville Auger"
+	copyright: "Copyright (c) 2013, Marc-André Douville Auger"
+	date: ""
+	revision: ""
 
-class
-	NET_CLIENT
+class
+	NET_CLIENT
 
-end
-
+end

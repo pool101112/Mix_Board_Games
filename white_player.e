@@ -1,11 +1,11 @@
 note
-	description: "Summary description for {WHITE_PLAYER}."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description: "[Cette classe est utilisée pour la gestion du joueur du côté des blancs.]"
+	author: "Marc-André Douville Auger"
+	copyright: "Copyright (c) 2013, Marc-André Douville Auger"
+	date: ""
+	revision: ""
 
-class
-	WHITE_PLAYER
+class
+	WHITE_PLAYER
 
-end
-
+end
