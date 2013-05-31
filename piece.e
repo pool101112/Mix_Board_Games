@@ -18,12 +18,28 @@ feature {NONE} -- Chargement des images
 		local
 			l_i:INTEGER_8
 		do
+			create_list (a_path_list.count.as_integer_16)
 			from
 				l_i := 1
 			until
 				l_i > a_path_list.count
 			loop
 				load_image (a_path_list[l_i])
+				l_i := l_i + 1
 			end
+		end
+
+feature {NONE} -- Destructeur
+
+	destroy
+	-- Libère la mémoire alloué pour `current'
+		do
+			free_surfaces
+		end
+
+	free_surfaces
+	-- Libère les surfaces
+		do
+			{SDL_IMAGE_WRAPPER}.SDL_FreeSurface (surface_ptr)
 		end
 end

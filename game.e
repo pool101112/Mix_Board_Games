@@ -123,13 +123,18 @@ feature {NONE} -- Jeux
 		local
 			l_game_board:BOARD
 			l_string_list:ARRAYED_LIST[STRING]
+			l_white_pieces_list:ARRAYED_LIST[REVERSI_PIECE]
+			l_black_pieces_list:ARRAYED_LIST[REVERSI_PIECE]
 			l_quit:BOOLEAN
 			l_event_ptr:POINTER
-			l_bg:BACKGROUND
+			l_white_piece:REVERSI_PIECE
 		do
 			create l_string_list.make (1)
 			l_string_list.extend ("ressources/images/board2.png")
 			create l_game_board.make (a_screen, l_string_list, 200, 150)
+			create l_white_pieces_list.make (64)
+			create l_black_pieces_list.make (64)
+			create l_white_piece.make (a_screen, l_string_list, 27)
 			l_event_ptr := sizeof_event_ptr
 			from
 			until

@@ -68,6 +68,14 @@ feature {GAME} -- Affichage
 			apply_surface_to_screen
 		end
 
+feature {GAME} -- Cases
+
+	add_square_to_occupied_list (a_position:INTEGER_8)
+	-- Ajoute une case à la liste des cases occupées
+		do
+			occupied_squares_list.extend (a_position)
+		end
+
 feature {GAME} -- Destructeur
 
 	destroy
@@ -82,9 +90,10 @@ feature {GAME} -- Destructeur
 			{SDL_IMAGE_WRAPPER}.SDL_FreeSurface (surface_ptr)
 		end
 
-feature {NONE} -- Variables de classe
+feature {GAME} -- Variables de classe
 
 	alpha_value:NATURAL_8
 	-- Valeur alpha utilisée lors de la transparence
-
+	occupied_squares_list:ARRAYED_LIST[INTEGER]
+	-- Liste des cases occupées
 end
