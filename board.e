@@ -31,6 +31,7 @@ feature {GAME} -- Constructeur
 			set_x (a_x)
 			set_y (a_y)
 			alpha_value := 255
+			create occupied_squares_list.make (64)
 		end
 
 feature {NONE} -- Chargement des images
@@ -68,7 +69,7 @@ feature {GAME} -- Affichage
 			apply_surface_to_screen
 		end
 
-feature {GAME} -- Cases
+feature {REVERSI_PIECE} -- Cases
 
 	add_square_to_occupied_list (a_position:INTEGER_8)
 	-- Ajoute une case à la liste des cases occupées

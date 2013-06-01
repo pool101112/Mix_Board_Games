@@ -137,7 +137,7 @@ feature {NONE} -- Erreur
 				is_error_true: is_error = true
 		end
 
-feature {GAME} -- Variables de classe
+feature {NONE} -- Variables de classe
 
 	memory_manager:POINTER
 	-- Pointeur de la gestion de mémoire
@@ -149,6 +149,10 @@ feature {GAME} -- Variables de classe
 	-- Liste de pointeurs de surfaces
 	screen:POINTER
 	-- Pointeur de la surface de l'écran
+	is_error:BOOLEAN
+	-- Confirmation d'une erreur
+
+feature {ANY} -- Variables de classe accessibles à tous
 	x:INTEGER_16 assign set_x
 	-- Coordonnée horizontale de l'image
 	y:INTEGER_16 assign set_y
@@ -157,8 +161,6 @@ feature {GAME} -- Variables de classe
 	-- Largeur de l'image
 	h:INTEGER_16
 	-- Hauteur de l'image
-	is_error:BOOLEAN
-	-- Confirmation d'une erreur
 
 invariant
 	is_error_is_false: is_error = false

@@ -44,12 +44,12 @@ feature {NONE} -- Menus
 			l_chess_button, l_checkers_button, l_reversi_button, l_profile_bubble:MENU_ELEMENT
 		do
 			create l_string_list.make (1)
-			l_string_list.extend ("ressources/images/main_menu.png")
+			l_string_list.extend ("ressources/images/menu/main_menu.png")
 			create l_background.make (a_screen, l_string_list)
-			l_chess_button := create_menu_object (a_screen, "ressources/images/bouton_echecs.png", 265, 200)
-			l_checkers_button := create_menu_object (a_screen, "ressources/images/bouton_dames.png", 265, 300)
-			l_reversi_button := create_menu_object (a_screen, "ressources/images/bouton_othello.png", 265, 400)
-			l_profile_bubble := create_menu_object (a_screen, "ressources/images/profile_bubble.png", 0, 0)
+			l_chess_button := create_menu_object (a_screen, "ressources/images/menu/bouton_echecs.png", 265, 200)
+			l_checkers_button := create_menu_object (a_screen, "ressources/images/menu/bouton_dames.png", 265, 300)
+			l_reversi_button := create_menu_object (a_screen, "ressources/images/menu/bouton_othello.png", 265, 400)
+			l_profile_bubble := create_menu_object (a_screen, "ressources/images/menu/profile_bubble.png", 0, 0)
 			l_profile_bubble.change_position(((800 // 2) - (l_profile_bubble.w // 2)).as_integer_16, (600 - l_profile_bubble.h).as_integer_16)
 			l_event_ptr := sizeof_event_ptr
 			l_profile_name := "DouDou"
@@ -112,7 +112,7 @@ feature {NONE} -- Menus
 			l_mouse_x := {SDL_EVENT_WRAPPER}.get_mouse_x (a_event_ptr).as_integer_16
 			l_mouse_y := {SDL_EVENT_WRAPPER}.get_mouse_y (a_event_ptr).as_integer_16
 			result := false
-			if (l_mouse_x >= a_button.x and l_mouse_x <= (a_button.x + a_button.w)) and (l_mouse_y >= a_button.y and l_mouse_y <= (a_button.y + a_button.h))   then
+			if (l_mouse_x >= a_button.x and l_mouse_x <= (a_button.x + a_button.w)) and (l_mouse_y >= a_button.y and l_mouse_y <= (a_button.y + a_button.h)) then
 				result := true
 			end
 		end
@@ -120,22 +120,25 @@ feature {NONE} -- Menus
 feature {NONE} -- Jeux
 
 	reversi_game (a_screen:POINTER; a_profile_name:STRING)
+	-- Lance le jeu d'Othello
 		local
 			l_game_board:BOARD
 			l_string_list:ARRAYED_LIST[STRING]
-			l_white_pieces_list:ARRAYED_LIST[REVERSI_PIECE]
-			l_black_pieces_list:ARRAYED_LIST[REVERSI_PIECE]
-			l_quit:BOOLEAN
+			l_pieces_list:ARRAYED_LIST[REVERSI_PIECE]
+			l_quit, l_white_player_turn:BOOLEAN
+			l_i:INTEGER
 			l_event_ptr:POINTER
-			l_white_piece:REVERSI_PIECE
 		do
 			create l_string_list.make (1)
-			l_string_list.extend ("ressources/images/board2.png")
+			l_string_list.extend ("ressources/images/reversi/reversi_board.png")
 			create l_game_board.make (a_screen, l_string_list, 200, 150)
-			create l_white_pieces_list.make (64)
-			create l_black_pieces_list.make (64)
-			create l_white_piece.make (a_screen, l_string_list, 27)
+			create l_pieces_list.make (64)
+			l_pieces_list.extend (create {REVERSI_PIECE}.make (a_screen, "ressources/images/reversi/white_reversi.png", 27, l_game_board))
+			l_pieces_list.extend (create {REVERSI_PIECE}.make (a_screen, "ressources/images/reversi/white_reversi.png", 36, l_game_board))
+			l_pieces_list.extend (create {REVERSI_PIECE}.make (a_screen, "ressources/images/reversi/black_reversi.png", 28, l_game_board))
+			l_pieces_list.extend (create {REVERSI_PIECE}.make (a_screen, "ressources/images/reversi/black_reversi.png", 35, l_game_board))
 			l_event_ptr := sizeof_event_ptr
+			l_white_player_turn := true
 			from
 			until
 				l_quit
@@ -146,9 +149,25 @@ feature {NONE} -- Jeux
 				loop
 					if quit_requested (l_event_ptr) then
 						l_quit := true
+					elseif click (l_event_ptr) then
+						if is_not_occupied (l_game_board, l_event_ptr) then
+							print ("Is not occupied")
+							io.put_new_line
+						else
+							print ("Occupied")
+							io.put_new_line
+						end
 					end
 				end
 				l_game_board.apply
+				from
+					l_i := 1
+				until
+					l_i > l_pieces_list.count
+				loop
+					l_pieces_list[l_i].apply
+					l_i := l_i + 1
+				end
 				refresh_screen (a_screen)
 			end
 			l_game_board.destroy
@@ -176,6 +195,34 @@ feature {NONE} -- Autres
 		do
 			create l_screen_title.make ("Mix Board Games")
 			{SDL_GENERAL_WRAPPER}.SDL_WM_SetCaption (l_screen_title.item, create{POINTER})
+		end
+
+feature {NONE} -- Cases valides
+
+	is_not_occupied (a_game_board:BOARD; a_event_ptr:POINTER):BOOLEAN
+	-- Confirmation que la souris est sur une case
+		local
+			l_mouse_x, l_mouse_y:INTEGER_16
+			l_board_square:INTEGER_16
+			l_i:INTEGER_8
+		do
+			l_mouse_x := {SDL_EVENT_WRAPPER}.get_mouse_x (a_event_ptr).as_integer_16
+			l_mouse_y := {SDL_EVENT_WRAPPER}.get_mouse_y (a_event_ptr).as_integer_16
+			result := false
+			if (l_mouse_x >= a_game_board.x and l_mouse_x <= (a_game_board.x + a_game_board.w)) and (l_mouse_y >= a_game_board.y and l_mouse_y <= (a_game_board.y + a_game_board.h)) then
+				l_board_square := (((l_mouse_x - a_game_board.x) // (a_game_board.w // 8)) + (((l_mouse_y - a_game_board.y) // (a_game_board.h // 8) * 8)))
+				result := true
+				from
+					l_i := 1
+				until
+					l_i > a_game_board.occupied_squares_list.count
+				loop
+					if l_board_square = a_game_board.occupied_squares_list[l_i] then
+						result := false
+					end
+					l_i := l_i + 1
+				end
+			end
 		end
 
 feature {NONE} -- Fonctions autres de la librairie SDL (Quit, etc.)

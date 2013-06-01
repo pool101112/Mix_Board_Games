@@ -16,18 +16,25 @@ create
 
 feature {GAME} -- Constructeur
 
-	make (a_screen:POINTER; a_path_list:LIST[STRING]; a_position:INTEGER_8)
+	make (a_screen:POINTER; a_path:STRING; a_board_square:INTEGER_8; a_game_board:BOARD)
 	-- Initialise `Current'
 		require
 			a_screen_is_not_null: not a_screen.is_default_pointer
-			a_path_list_is_not_empty: not a_path_list.is_empty
+			a_path_is_not_empty: not a_path.is_empty
+		local
+			l_string_list:ARRAYED_LIST[STRING]
 		do
 			screen := a_screen
 			create_surface_area
-			load_image_list (a_path_list)
+			create l_string_list.make (1)
+			l_string_list.extend (a_path)
+			load_image_list (l_string_list)
 			set_surface_ptr (1)
 			set_w
 			set_h
+			set_x ((a_game_board.x + ((a_board_square \\ 8) * (a_game_board.w // 8))) + ((a_game_board.w // 8) // 2) - (w // 2))
+			set_y ((a_game_board.y + ((a_board_square // 8) * (a_game_board.h // 8))) + ((a_game_board.h // 8) // 2) - (w // 2))
+			a_game_board.add_square_to_occupied_list (a_board_square)
 			alpha_value := 255
 		end
 
