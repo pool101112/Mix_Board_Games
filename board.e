@@ -21,6 +21,8 @@ feature {GAME} -- Constructeur
 		require
 			a_screen_is_not_null: not a_screen.is_default_pointer
 			a_path_list_is_not_empty: not a_path_list.is_empty
+		local
+			l_i:INTEGER_8
 		do
 			screen := a_screen
 			create_surface_area
@@ -32,6 +34,14 @@ feature {GAME} -- Constructeur
 			set_y (a_y)
 			alpha_value := 255
 			create occupied_squares_list.make_filled (64)
+			from
+				l_i := 1
+			until
+				l_i > occupied_squares_list.count
+			loop
+				occupied_squares_list[l_i] := "none"
+				l_i := l_i + 1
+			end
 		end
 
 feature {NONE} -- Chargement des images
@@ -71,10 +81,10 @@ feature {GAME} -- Affichage
 
 feature {REVERSI_PIECE} -- Cases
 
-	add_square_to_occupied_list (a_position:INTEGER_8)
+	add_square_to_occupied_list (a_position:INTEGER_8; a_color:STRING)
 	-- Ajoute une case à la liste des cases occupées
 		do
-			occupied_squares_list[a_position] := true
+			occupied_squares_list[a_position] := a_color
 		end
 
 feature {GAME} -- Destructeur
@@ -95,6 +105,6 @@ feature {GAME} -- Variables de classe
 
 	alpha_value:NATURAL_8
 	-- Valeur alpha utilisée lors de la transparence
-	occupied_squares_list:ARRAYED_LIST[BOOLEAN]
+	occupied_squares_list:ARRAYED_LIST[STRING]
 	-- Liste des cases occupées
 end

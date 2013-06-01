@@ -125,18 +125,20 @@ feature {NONE} -- Jeux
 			l_game_board:BOARD
 			l_string_list:ARRAYED_LIST[STRING]
 			l_pieces_list:ARRAYED_LIST[REVERSI_PIECE]
-			l_quit, l_white_player_turn:BOOLEAN
-			l_i, l_i_test:INTEGER
+			l_quit, l_white_player_turn, l_valid_move:BOOLEAN
+			l_i:INTEGER
 			l_event_ptr:POINTER
+			l_board_square, l_next_piece:INTEGER_8
+			l_color:STRING
 		do
 			create l_string_list.make (1)
 			l_string_list.extend ("ressources/images/reversi/reversi_board.png")
 			create l_game_board.make (a_screen, l_string_list, 200, 150)
-			create l_pieces_list.make (64)
-			l_pieces_list.extend (create {REVERSI_PIECE}.make (a_screen, "ressources/images/reversi/white_reversi.png", 27, l_game_board, false))
-			l_pieces_list.extend (create {REVERSI_PIECE}.make (a_screen, "ressources/images/reversi/white_reversi.png", 36, l_game_board, false))
-			l_pieces_list.extend (create {REVERSI_PIECE}.make (a_screen, "ressources/images/reversi/black_reversi.png", 28, l_game_board, false))
-			l_pieces_list.extend (create {REVERSI_PIECE}.make (a_screen, "ressources/images/reversi/black_reversi.png", 35, l_game_board, false))
+			create l_pieces_list.make_filled (64)
+			l_pieces_list[27] := (create {REVERSI_PIECE}.make (a_screen, 27, l_game_board, false, "w"))
+			l_pieces_list[36] := (create {REVERSI_PIECE}.make (a_screen, 36, l_game_board, false, "w"))
+			l_pieces_list[28] := (create {REVERSI_PIECE}.make (a_screen, 28, l_game_board, false, "b"))
+			l_pieces_list[35] := (create {REVERSI_PIECE}.make (a_screen, 35, l_game_board, false, "b"))
 			l_event_ptr := sizeof_event_ptr
 			l_white_player_turn := true
 			from
@@ -150,22 +152,74 @@ feature {NONE} -- Jeux
 					if quit_requested (l_event_ptr) then
 						l_quit := true
 					elseif click (l_event_ptr) then
-						l_i_test := l_i_test + 1
-						if l_i_test = 3 then
-							print ("")
+						print ("Your move is starting... ")
+						io.put_new_line
+						print ("------------------------ ")
+						io.put_new_line
+						if l_white_player_turn then
+							l_color := "w"
+						else
+							l_color := "b"
 						end
-						if is_not_occupied (l_game_board, l_event_ptr) and is_valid_move (l_game_board, board_square(l_game_board, l_event_ptr)) then
-							if l_white_player_turn then
-								l_pieces_list.extend (create {REVERSI_PIECE}.make (a_screen, "ressources/images/reversi/white_reversi.png", board_square (l_game_board, l_event_ptr), l_game_board, false))
-								l_white_player_turn := false
-							else
-								l_pieces_list.extend (create {REVERSI_PIECE}.make (a_screen, "ressources/images/reversi/black_reversi.png", board_square (l_game_board, l_event_ptr), l_game_board, false))
-								l_white_player_turn := true
+						if is_not_occupied (l_game_board, l_event_ptr) then
+							l_board_square := board_square (l_game_board, l_event_ptr) + 1
+							if is_valid_move (l_game_board, l_board_square, l_white_player_turn, -1, -8) >= 0 then
+								l_valid_move := true
+								l_next_piece := is_valid_move (l_game_board, l_board_square, l_white_player_turn, -1, -8)
+								change_pieces_color (l_game_board, l_board_square, l_next_piece, -1, -8, l_color, l_pieces_list, a_screen)
+							end
+							if is_valid_move (l_game_board, l_board_square, l_white_player_turn, -1, 0) >= 0 then
+								l_valid_move := true
+								l_next_piece := is_valid_move (l_game_board, l_board_square, l_white_player_turn, -1, 0)
+								change_pieces_color (l_game_board, l_board_square, l_next_piece, -1, 0, l_color, l_pieces_list, a_screen)
+							end
+							if is_valid_move (l_game_board, l_board_square, l_white_player_turn, -1, 8) >= 0 then
+								l_valid_move := true
+								l_next_piece := is_valid_move (l_game_board, l_board_square, l_white_player_turn, -1, 8)
+								change_pieces_color (l_game_board, l_board_square, l_next_piece, -1, 8, l_color, l_pieces_list, a_screen)
+							end
+							if is_valid_move (l_game_board, l_board_square, l_white_player_turn, 0, -8) >= 0 then
+								l_valid_move := true
+								l_next_piece := is_valid_move (l_game_board, l_board_square, l_white_player_turn, 0, -8)
+								change_pieces_color (l_game_board, l_board_square, l_next_piece, 0, -8, l_color, l_pieces_list, a_screen)
+							end
+							if is_valid_move (l_game_board, l_board_square, l_white_player_turn, 0, 8) >= 0 then
+								l_valid_move := true
+								l_next_piece := is_valid_move (l_game_board, l_board_square, l_white_player_turn, 0, 8)
+								change_pieces_color (l_game_board, l_board_square, l_next_piece, 0, 8, l_color, l_pieces_list, a_screen)
+							end
+							if is_valid_move (l_game_board, l_board_square, l_white_player_turn, 1, -8) >= 0 then
+								l_valid_move := true
+								l_next_piece := is_valid_move (l_game_board, l_board_square, l_white_player_turn, 1, -8)
+								change_pieces_color (l_game_board, l_board_square, l_next_piece, 1, -8, l_color, l_pieces_list, a_screen)
+							end
+							if is_valid_move (l_game_board, l_board_square, l_white_player_turn, 1, 0) >= 0 then
+								l_valid_move := true
+								l_next_piece := is_valid_move (l_game_board, l_board_square, l_white_player_turn, 1, 0)
+								change_pieces_color (l_game_board, l_board_square, l_next_piece, 1, 0, l_color, l_pieces_list, a_screen)
+							end
+							if is_valid_move (l_game_board, l_board_square, l_white_player_turn, 1, 8) >= 0 then
+								l_valid_move := true
+								l_next_piece := is_valid_move (l_game_board, l_board_square, l_white_player_turn, 1, 8)
+								change_pieces_color (l_game_board, l_board_square, l_next_piece, 1, 8, l_color, l_pieces_list, a_screen)
+							end
+
+							if l_valid_move then
+								l_pieces_list[l_board_square] := (create {REVERSI_PIECE}.make (a_screen, l_board_square - 1, l_game_board, false, l_color))
+								if l_white_player_turn then
+									l_white_player_turn := false
+								else
+									l_white_player_turn := true
+								end
+								l_valid_move := false
 							end
 						else
 							print ("Occupied")
 							io.put_new_line
 						end
+						print ("Your move is done!")
+						print ("||||||||||||||||||")
+						io.put_new_line
 					end
 				end
 				l_game_board.apply
@@ -174,7 +228,9 @@ feature {NONE} -- Jeux
 				until
 					l_i > l_pieces_list.count
 				loop
-					l_pieces_list[l_i].apply
+					if l_pieces_list[l_i] /= void then
+						l_pieces_list[l_i].apply
+					end
 					l_i := l_i + 1
 				end
 				refresh_screen (a_screen)
@@ -185,7 +241,9 @@ feature {NONE} -- Jeux
 			until
 				l_i > l_pieces_list.count
 			loop
-				l_pieces_list[l_i].destroy
+				if l_pieces_list[l_i] /= void then
+						l_pieces_list[l_i].destroy
+					end
 				l_i := l_i + 1
 			end
 		end
@@ -239,117 +297,85 @@ feature {NONE} -- Cases valides
 			result := false
 			if (l_mouse_x > a_game_board.x and l_mouse_x < (a_game_board.x + a_game_board.w)) and (l_mouse_y > a_game_board.y and l_mouse_y < (a_game_board.y + a_game_board.h)) then
 				l_board_square := (((l_mouse_x - a_game_board.x) // (a_game_board.w // 8)) + (((l_mouse_y - a_game_board.y) // (a_game_board.h // 8) * 8)))
-				if not a_game_board.occupied_squares_list[l_board_square + 1] then
+				if a_game_board.occupied_squares_list[l_board_square + 1].is_equal ("none") then
 					result := true
 				end
 			end
 		end
 
-	is_valid_move (a_board_game:BOARD; a_board_square:INTEGER_8):BOOLEAN
-	-- Confirmation que le mouvement est valide
+	is_valid_move (a_board_game:BOARD; a_board_square:INTEGER_8; a_white_player_turn:BOOLEAN; a_x, a_y:INTEGER_8):INTEGER_8
+	-- Confirmation que le mouvement est valide selon la pièce en haut à gauche
 		local
-			l_board_square:INTEGER_8
+			l_board_square, l_x_limit:INTEGER_8
+			l_enemy_color, l_player_color:STRING
 		do
-			result := false
-			l_board_square := a_board_square + 1
-			if a_board_square \\ 8 = 0 then
-				if a_board_square // 8 = 0 then
-					if a_board_game.occupied_squares_list[l_board_square + 8] then
-						result := true
-					elseif a_board_game.occupied_squares_list[l_board_square + 1 + 8] then
-						result := true
-					end
-				elseif a_board_square // 8 = 7 then
-					if a_board_game.occupied_squares_list[l_board_square - 8] then
-						result := true
-					elseif a_board_game.occupied_squares_list[l_board_square + 1 - 8] then
-						result := true
-					end
-				else
-					if a_board_game.occupied_squares_list[l_board_square - 8] then
-						result := true
-					elseif a_board_game.occupied_squares_list[l_board_square + 1 - 8] then
-						result := true
-					elseif a_board_game.occupied_squares_list[l_board_square + 8] then
-						result := true
-					elseif a_board_game.occupied_squares_list[l_board_square + 1 + 8] then
-						result := true
-					end
-				end
-				if a_board_game.occupied_squares_list[l_board_square + 1] then
-					result := true
-				end
-			elseif a_board_square \\ 8 = 7 then
-				if a_board_square // 8 = 0 then
-					if a_board_game.occupied_squares_list[l_board_square + 8] then
-						result := true
-					elseif a_board_game.occupied_squares_list[l_board_square - 1 + 8] then
-						result := true
-					end
-				elseif a_board_square // 8 = 7 then
-					if a_board_game.occupied_squares_list[l_board_square - 8] then
-						result := true
-					elseif a_board_game.occupied_squares_list[l_board_square - 1 - 8] then
-						result := true
-					end
-				else
-					if a_board_game.occupied_squares_list[l_board_square - 8] then
-						result := true
-					elseif a_board_game.occupied_squares_list[l_board_square - 1 - 8] then
-						result := true
-					elseif a_board_game.occupied_squares_list[l_board_square + 8] then
-						result := true
-					elseif a_board_game.occupied_squares_list[l_board_square - 1 + 8] then
-						result := true
-					end
-				end
-				if a_board_game.occupied_squares_list[l_board_square - 1] then
-					result := true
-				end
-			elseif a_board_square // 8 = 0 then
-				if a_board_game.occupied_squares_list[l_board_square + 1] then
-					result := true
-				elseif a_board_game.occupied_squares_list[l_board_square - 1] then
-					result := true
-				elseif a_board_game.occupied_squares_list[l_board_square + 8] then
-					result := true
-				elseif a_board_game.occupied_squares_list[l_board_square + 1 + 8] then
-					result := true
-				elseif a_board_game.occupied_squares_list[l_board_square - 1 + 8] then
-					result := true
-				end
-			elseif a_board_square // 8 = 7 then
-				if a_board_game.occupied_squares_list[l_board_square + 1] then
-					result := true
-				elseif a_board_game.occupied_squares_list[l_board_square - 1] then
-					result := true
-				elseif a_board_game.occupied_squares_list[l_board_square - 8] then
-					result := true
-				elseif a_board_game.occupied_squares_list[l_board_square + 1 - 8] then
-					result := true
-				elseif a_board_game.occupied_squares_list[l_board_square - 1 - 8] then
-					result := true
-				end
+			result := - 1
+			l_board_square := a_board_square
+			if a_white_player_turn then
+				l_enemy_color := "b"
+				l_player_color := "w"
 			else
-				if a_board_game.occupied_squares_list[l_board_square + 1] then
-					result := true
-				elseif a_board_game.occupied_squares_list[l_board_square - 1] then
-					result := true
-				elseif a_board_game.occupied_squares_list[l_board_square + 8] then
-					result := true
-				elseif a_board_game.occupied_squares_list[l_board_square - 8] then
-					result := true
-				elseif a_board_game.occupied_squares_list[l_board_square + 1 + 8] then
-					result := true
-				elseif a_board_game.occupied_squares_list[l_board_square + 1 - 8] then
-					result := true
-				elseif a_board_game.occupied_squares_list[l_board_square - 1 + 8] then
-					result := true
-				elseif a_board_game.occupied_squares_list[l_board_square - 1 - 8] then
-					result := true
+				l_enemy_color := "w"
+				l_player_color := "b"
+			end
+
+			if a_y = 0 then
+				if a_x = -1 then
+					l_x_limit := ((8 * (a_board_square // 8)) + 1).as_integer_8
+				elseif a_x = 1 then
+					l_x_limit := (((8 * (a_board_square // 8)) + 7) + 1).as_integer_8
+				end
+			end
+
+			if (l_board_square + a_x + a_y) < 1 or (l_board_square + a_x + a_y) > 64 then
+				result := - 1
+			elseif a_board_game.occupied_squares_list[l_board_square + a_x + a_y].is_equal (l_enemy_color) then
+				from
+					result := -2
+				until
+					result > -2
+				loop
+					l_board_square := l_board_square + a_x + a_y
+					if l_board_square < 1 or l_board_square > 64 then
+						result := -1
+					elseif a_board_game.occupied_squares_list[l_board_square].is_equal (l_player_color) then
+						result := l_board_square
+					end
+					if a_x = 1 and a_y = 0 then
+						if l_board_square > l_x_limit then
+							result := -1
+						end
+					elseif a_x = -1 and a_y = 0 then
+						if l_board_square < l_x_limit then
+							result := -1
+						end
+					end
 				end
 			end
 		end
+
+	change_pieces_color (a_game_board:BOARD; a_board_square, a_board_final_square, a_x, a_y:INTEGER_8; a_color:STRING; a_pieces_list:ARRAYED_LIST[REVERSI_PIECE]; a_screen:POINTER)
+	-- Change la couleur des pièces
+	local
+		l_board_square:INTEGER_8
+	do
+		l_board_square := a_board_square
+		from
+			l_board_square := l_board_square + a_x + a_y
+		until
+			l_board_square = a_board_final_square
+		loop
+			print ("Going to destroy square " + (l_board_square - 1).out + "... ")
+			a_pieces_list[l_board_square - 1].destroy
+			print ("Done! Creating new piece... ")
+			a_pieces_list[l_board_square - 1] := (create {REVERSI_PIECE}.make (a_screen, l_board_square - 1, a_game_board, true, a_color))
+			print ("Done! Changing datas... ")
+			a_game_board.occupied_squares_list[l_board_square] := a_color
+			print ("Done!")
+			io.put_new_line
+			l_board_square := l_board_square + a_x + a_y
+		end
+	end
 
 feature {NONE} -- Fonctions autres de la librairie SDL (Quit, etc.)
 
