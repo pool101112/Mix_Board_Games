@@ -135,10 +135,10 @@ feature {NONE} -- Jeux
 			l_string_list.extend ("ressources/images/reversi/reversi_board.png")
 			create l_game_board.make (a_screen, l_string_list, 200, 150)
 			create l_pieces_list.make_filled (64)
-			l_pieces_list[27] := (create {REVERSI_PIECE}.make (a_screen, 27, l_game_board, false, "w"))
-			l_pieces_list[36] := (create {REVERSI_PIECE}.make (a_screen, 36, l_game_board, false, "w"))
-			l_pieces_list[28] := (create {REVERSI_PIECE}.make (a_screen, 28, l_game_board, false, "b"))
-			l_pieces_list[35] := (create {REVERSI_PIECE}.make (a_screen, 35, l_game_board, false, "b"))
+			l_pieces_list[28] := (create {REVERSI_PIECE}.make (a_screen, 27, l_game_board, false, "w"))
+			l_pieces_list[37] := (create {REVERSI_PIECE}.make (a_screen, 36, l_game_board, false, "w"))
+			l_pieces_list[29] := (create {REVERSI_PIECE}.make (a_screen, 28, l_game_board, false, "b"))
+			l_pieces_list[36] := (create {REVERSI_PIECE}.make (a_screen, 35, l_game_board, false, "b"))
 			l_event_ptr := sizeof_event_ptr
 			l_white_player_turn := true
 			from
@@ -321,9 +321,9 @@ feature {NONE} -- Cases valides
 
 			if a_y = 0 then
 				if a_x = -1 then
-					l_x_limit := ((8 * (a_board_square // 8)) + 1).as_integer_8
+					l_x_limit := ((8 * ((l_board_square - 1) // 8)) + 1).as_integer_8
 				elseif a_x = 1 then
-					l_x_limit := (((8 * (a_board_square // 8)) + 7) + 1).as_integer_8
+					l_x_limit := (((8 * ((l_board_square - 1) // 8)) + 7) + 1).as_integer_8
 				end
 			end
 
@@ -340,6 +340,8 @@ feature {NONE} -- Cases valides
 						result := -1
 					elseif a_board_game.occupied_squares_list[l_board_square].is_equal (l_player_color) then
 						result := l_board_square
+					elseif a_board_game.occupied_squares_list[l_board_square].is_equal ("none") then
+						result := -1
 					end
 					if a_x = 1 and a_y = 0 then
 						if l_board_square > l_x_limit then
@@ -366,9 +368,9 @@ feature {NONE} -- Cases valides
 			l_board_square = a_board_final_square
 		loop
 			print ("Going to destroy square " + (l_board_square - 1).out + "... ")
-			a_pieces_list[l_board_square - 1].destroy
+			a_pieces_list[l_board_square].destroy
 			print ("Done! Creating new piece... ")
-			a_pieces_list[l_board_square - 1] := (create {REVERSI_PIECE}.make (a_screen, l_board_square - 1, a_game_board, true, a_color))
+			a_pieces_list[l_board_square] := (create {REVERSI_PIECE}.make (a_screen, l_board_square - 1, a_game_board, true, a_color))
 			print ("Done! Changing datas... ")
 			a_game_board.occupied_squares_list[l_board_square] := a_color
 			print ("Done!")
