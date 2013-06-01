@@ -126,7 +126,7 @@ feature {NONE} -- Jeux
 			l_string_list:ARRAYED_LIST[STRING]
 			l_pieces_list:ARRAYED_LIST[REVERSI_PIECE]
 			l_quit, l_white_player_turn:BOOLEAN
-			l_i:INTEGER
+			l_i, l_i_test:INTEGER
 			l_event_ptr:POINTER
 		do
 			create l_string_list.make (1)
@@ -150,7 +150,11 @@ feature {NONE} -- Jeux
 					if quit_requested (l_event_ptr) then
 						l_quit := true
 					elseif click (l_event_ptr) then
-						if is_not_occupied (l_game_board, l_event_ptr) then
+						l_i_test := l_i_test + 1
+						if l_i_test = 3 then
+							print ("")
+						end
+						if is_not_occupied (l_game_board, l_event_ptr) and is_valid_move (l_game_board, board_square(l_game_board, l_event_ptr)) then
 							if l_white_player_turn then
 								l_pieces_list.extend (create {REVERSI_PIECE}.make (a_screen, "ressources/images/reversi/white_reversi.png", board_square (l_game_board, l_event_ptr), l_game_board, false))
 								l_white_player_turn := false
@@ -229,23 +233,120 @@ feature {NONE} -- Cases valides
 		local
 			l_mouse_x, l_mouse_y:INTEGER_16
 			l_board_square:INTEGER_16
-			l_i:INTEGER_8
 		do
 			l_mouse_x := {SDL_EVENT_WRAPPER}.get_mouse_x (a_event_ptr).as_integer_16
 			l_mouse_y := {SDL_EVENT_WRAPPER}.get_mouse_y (a_event_ptr).as_integer_16
 			result := false
 			if (l_mouse_x > a_game_board.x and l_mouse_x < (a_game_board.x + a_game_board.w)) and (l_mouse_y > a_game_board.y and l_mouse_y < (a_game_board.y + a_game_board.h)) then
 				l_board_square := (((l_mouse_x - a_game_board.x) // (a_game_board.w // 8)) + (((l_mouse_y - a_game_board.y) // (a_game_board.h // 8) * 8)))
-				result := true
-				from
-					l_i := 1
-				until
-					l_i > a_game_board.occupied_squares_list.count
-				loop
-					if l_board_square = a_game_board.occupied_squares_list[l_i] then
-						result := false
+				if not a_game_board.occupied_squares_list[l_board_square + 1] then
+					result := true
+				end
+			end
+		end
+
+	is_valid_move (a_board_game:BOARD; a_board_square:INTEGER_8):BOOLEAN
+	-- Confirmation que le mouvement est valide
+		local
+			l_board_square:INTEGER_8
+		do
+			result := false
+			l_board_square := a_board_square + 1
+			if a_board_square \\ 8 = 0 then
+				if a_board_square // 8 = 0 then
+					if a_board_game.occupied_squares_list[l_board_square + 8] then
+						result := true
+					elseif a_board_game.occupied_squares_list[l_board_square + 1 + 8] then
+						result := true
 					end
-					l_i := l_i + 1
+				elseif a_board_square // 8 = 7 then
+					if a_board_game.occupied_squares_list[l_board_square - 8] then
+						result := true
+					elseif a_board_game.occupied_squares_list[l_board_square + 1 - 8] then
+						result := true
+					end
+				else
+					if a_board_game.occupied_squares_list[l_board_square - 8] then
+						result := true
+					elseif a_board_game.occupied_squares_list[l_board_square + 1 - 8] then
+						result := true
+					elseif a_board_game.occupied_squares_list[l_board_square + 8] then
+						result := true
+					elseif a_board_game.occupied_squares_list[l_board_square + 1 + 8] then
+						result := true
+					end
+				end
+				if a_board_game.occupied_squares_list[l_board_square + 1] then
+					result := true
+				end
+			elseif a_board_square \\ 8 = 7 then
+				if a_board_square // 8 = 0 then
+					if a_board_game.occupied_squares_list[l_board_square + 8] then
+						result := true
+					elseif a_board_game.occupied_squares_list[l_board_square - 1 + 8] then
+						result := true
+					end
+				elseif a_board_square // 8 = 7 then
+					if a_board_game.occupied_squares_list[l_board_square - 8] then
+						result := true
+					elseif a_board_game.occupied_squares_list[l_board_square - 1 - 8] then
+						result := true
+					end
+				else
+					if a_board_game.occupied_squares_list[l_board_square - 8] then
+						result := true
+					elseif a_board_game.occupied_squares_list[l_board_square - 1 - 8] then
+						result := true
+					elseif a_board_game.occupied_squares_list[l_board_square + 8] then
+						result := true
+					elseif a_board_game.occupied_squares_list[l_board_square - 1 + 8] then
+						result := true
+					end
+				end
+				if a_board_game.occupied_squares_list[l_board_square - 1] then
+					result := true
+				end
+			elseif a_board_square // 8 = 0 then
+				if a_board_game.occupied_squares_list[l_board_square + 1] then
+					result := true
+				elseif a_board_game.occupied_squares_list[l_board_square - 1] then
+					result := true
+				elseif a_board_game.occupied_squares_list[l_board_square + 8] then
+					result := true
+				elseif a_board_game.occupied_squares_list[l_board_square + 1 + 8] then
+					result := true
+				elseif a_board_game.occupied_squares_list[l_board_square - 1 + 8] then
+					result := true
+				end
+			elseif a_board_square // 8 = 7 then
+				if a_board_game.occupied_squares_list[l_board_square + 1] then
+					result := true
+				elseif a_board_game.occupied_squares_list[l_board_square - 1] then
+					result := true
+				elseif a_board_game.occupied_squares_list[l_board_square - 8] then
+					result := true
+				elseif a_board_game.occupied_squares_list[l_board_square + 1 - 8] then
+					result := true
+				elseif a_board_game.occupied_squares_list[l_board_square - 1 - 8] then
+					result := true
+				end
+			else
+				if a_board_game.occupied_squares_list[l_board_square + 1] then
+					result := true
+				elseif a_board_game.occupied_squares_list[l_board_square - 1] then
+					result := true
+				elseif a_board_game.occupied_squares_list[l_board_square + 8] then
+					result := true
+				elseif a_board_game.occupied_squares_list[l_board_square - 8] then
+					result := true
+				elseif a_board_game.occupied_squares_list[l_board_square + 1 + 8] then
+					result := true
+				elseif a_board_game.occupied_squares_list[l_board_square + 1 - 8] then
+					result := true
+				elseif a_board_game.occupied_squares_list[l_board_square - 1 + 8] then
+					result := true
+				elseif a_board_game.occupied_squares_list[l_board_square - 1 - 8] then
+					result := true
 				end
 			end
 		end

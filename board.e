@@ -31,7 +31,7 @@ feature {GAME} -- Constructeur
 			set_x (a_x)
 			set_y (a_y)
 			alpha_value := 255
-			create occupied_squares_list.make (64)
+			create occupied_squares_list.make_filled (64)
 		end
 
 feature {NONE} -- Chargement des images
@@ -74,7 +74,7 @@ feature {REVERSI_PIECE} -- Cases
 	add_square_to_occupied_list (a_position:INTEGER_8)
 	-- Ajoute une case à la liste des cases occupées
 		do
-			occupied_squares_list.extend (a_position)
+			occupied_squares_list[a_position] := true
 		end
 
 feature {GAME} -- Destructeur
@@ -95,6 +95,6 @@ feature {GAME} -- Variables de classe
 
 	alpha_value:NATURAL_8
 	-- Valeur alpha utilisée lors de la transparence
-	occupied_squares_list:ARRAYED_LIST[INTEGER]
+	occupied_squares_list:ARRAYED_LIST[BOOLEAN]
 	-- Liste des cases occupées
 end
