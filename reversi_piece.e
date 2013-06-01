@@ -16,7 +16,7 @@ create
 
 feature {GAME} -- Constructeur
 
-	make (a_screen:POINTER; a_path:STRING; a_board_square:INTEGER_8; a_game_board:BOARD)
+	make (a_screen:POINTER; a_path:STRING; a_board_square:INTEGER_8; a_game_board:BOARD; a_changing_color:BOOLEAN)
 	-- Initialise `Current'
 		require
 			a_screen_is_not_null: not a_screen.is_default_pointer
@@ -34,7 +34,9 @@ feature {GAME} -- Constructeur
 			set_h
 			set_x ((a_game_board.x + ((a_board_square \\ 8) * (a_game_board.w // 8))) + ((a_game_board.w // 8) // 2) - (w // 2))
 			set_y ((a_game_board.y + ((a_board_square // 8) * (a_game_board.h // 8))) + ((a_game_board.h // 8) // 2) - (w // 2))
-			a_game_board.add_square_to_occupied_list (a_board_square)
+			if not a_changing_color then
+				a_game_board.add_square_to_occupied_list (a_board_square)
+			end
 			alpha_value := 255
 		end
 

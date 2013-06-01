@@ -29,7 +29,7 @@ feature {NONE} -- Chargement des images
 			end
 		end
 
-feature {NONE} -- Destructeur
+feature {GAME} -- Destructeur
 
 	destroy
 	-- Libère la mémoire alloué pour `current'

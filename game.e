@@ -133,10 +133,10 @@ feature {NONE} -- Jeux
 			l_string_list.extend ("ressources/images/reversi/reversi_board.png")
 			create l_game_board.make (a_screen, l_string_list, 200, 150)
 			create l_pieces_list.make (64)
-			l_pieces_list.extend (create {REVERSI_PIECE}.make (a_screen, "ressources/images/reversi/white_reversi.png", 27, l_game_board))
-			l_pieces_list.extend (create {REVERSI_PIECE}.make (a_screen, "ressources/images/reversi/white_reversi.png", 36, l_game_board))
-			l_pieces_list.extend (create {REVERSI_PIECE}.make (a_screen, "ressources/images/reversi/black_reversi.png", 28, l_game_board))
-			l_pieces_list.extend (create {REVERSI_PIECE}.make (a_screen, "ressources/images/reversi/black_reversi.png", 35, l_game_board))
+			l_pieces_list.extend (create {REVERSI_PIECE}.make (a_screen, "ressources/images/reversi/white_reversi.png", 27, l_game_board, false))
+			l_pieces_list.extend (create {REVERSI_PIECE}.make (a_screen, "ressources/images/reversi/white_reversi.png", 36, l_game_board, false))
+			l_pieces_list.extend (create {REVERSI_PIECE}.make (a_screen, "ressources/images/reversi/black_reversi.png", 28, l_game_board, false))
+			l_pieces_list.extend (create {REVERSI_PIECE}.make (a_screen, "ressources/images/reversi/black_reversi.png", 35, l_game_board, false))
 			l_event_ptr := sizeof_event_ptr
 			l_white_player_turn := true
 			from
@@ -151,8 +151,13 @@ feature {NONE} -- Jeux
 						l_quit := true
 					elseif click (l_event_ptr) then
 						if is_not_occupied (l_game_board, l_event_ptr) then
-							print ("Is not occupied")
-							io.put_new_line
+							if l_white_player_turn then
+								l_pieces_list.extend (create {REVERSI_PIECE}.make (a_screen, "ressources/images/reversi/white_reversi.png", board_square (l_game_board, l_event_ptr), l_game_board, false))
+								l_white_player_turn := false
+							else
+								l_pieces_list.extend (create {REVERSI_PIECE}.make (a_screen, "ressources/images/reversi/black_reversi.png", board_square (l_game_board, l_event_ptr), l_game_board, false))
+								l_white_player_turn := true
+							end
 						else
 							print ("Occupied")
 							io.put_new_line
@@ -171,6 +176,14 @@ feature {NONE} -- Jeux
 				refresh_screen (a_screen)
 			end
 			l_game_board.destroy
+			from
+				l_i := 1
+			until
+				l_i > l_pieces_list.count
+			loop
+				l_pieces_list[l_i].destroy
+				l_i := l_i + 1
+			end
 		end
 
 feature {NONE} -- Autres
@@ -199,8 +212,20 @@ feature {NONE} -- Autres
 
 feature {NONE} -- Cases valides
 
+	board_square (a_game_board:BOARD; a_event_ptr:POINTER):INTEGER_8
+	-- Numéro de la case du plateau
+		local
+			l_mouse_x, l_mouse_y:INTEGER_16
+		do
+			l_mouse_x := {SDL_EVENT_WRAPPER}.get_mouse_x (a_event_ptr).as_integer_16
+			l_mouse_y := {SDL_EVENT_WRAPPER}.get_mouse_y (a_event_ptr).as_integer_16
+			if (l_mouse_x > a_game_board.x and l_mouse_x < (a_game_board.x + a_game_board.w)) and (l_mouse_y > a_game_board.y and l_mouse_y < (a_game_board.y + a_game_board.h)) then
+				result := (((l_mouse_x - a_game_board.x) // (a_game_board.w // 8)) + (((l_mouse_y - a_game_board.y) // (a_game_board.h // 8) * 8))).as_integer_8
+			end
+		end
+
 	is_not_occupied (a_game_board:BOARD; a_event_ptr:POINTER):BOOLEAN
-	-- Confirmation que la souris est sur une case
+	-- Confirmation que la case est libre
 		local
 			l_mouse_x, l_mouse_y:INTEGER_16
 			l_board_square:INTEGER_16
@@ -209,7 +234,7 @@ feature {NONE} -- Cases valides
 			l_mouse_x := {SDL_EVENT_WRAPPER}.get_mouse_x (a_event_ptr).as_integer_16
 			l_mouse_y := {SDL_EVENT_WRAPPER}.get_mouse_y (a_event_ptr).as_integer_16
 			result := false
-			if (l_mouse_x >= a_game_board.x and l_mouse_x <= (a_game_board.x + a_game_board.w)) and (l_mouse_y >= a_game_board.y and l_mouse_y <= (a_game_board.y + a_game_board.h)) then
+			if (l_mouse_x > a_game_board.x and l_mouse_x < (a_game_board.x + a_game_board.w)) and (l_mouse_y > a_game_board.y and l_mouse_y < (a_game_board.y + a_game_board.h)) then
 				l_board_square := (((l_mouse_x - a_game_board.x) // (a_game_board.w // 8)) + (((l_mouse_y - a_game_board.y) // (a_game_board.h // 8) * 8)))
 				result := true
 				from
