@@ -1,16 +1,26 @@
 note
-	description: "[Cette classe abstraite est utilisée pour la gestion des pièces en général.]"
-	author: "Marc-André Douville Auger"
-	copyright: "Copyright (c) 2013, Marc-André Douville Auger"
-	date: ""
-	revision: ""
+	description: "Summary description for {TEXT}."
+	author: ""
+	date: "$Date$"
+	revision: "$Revision$"
 
-deferred class
-	PIECE
+class
+	TEXT
 
 inherit
 	IMAGE
 
+create
+	make
+
+feature {GAME} -- Constructeur
+
+	make (a_screen:POINTER; a_text:STRING; a_x, a_y:INTEGER_16)
+	-- Initialise `current'
+	do
+
+	end
+	
 feature {NONE} -- Chargement des images
 
 	load_image_list (a_path_list:LIST[STRING])
@@ -60,7 +70,7 @@ feature {GAME} -- Destructeur
 			{SDL_IMAGE_WRAPPER}.SDL_FreeSurface (surface_ptr)
 		end
 
-feature {NONE} -- Variables de classe
+feature {GAME} -- Variables de classe
 
 	alpha_value:NATURAL_8
 	-- Valeur alpha utilisée lors de la transparence

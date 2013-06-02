@@ -17,7 +17,7 @@ create
 feature {GAME} -- Constructeur
 
 	make (a_screen:POINTER; a_board_square:INTEGER_8; a_game_board:BOARD; a_changing_color:BOOLEAN; a_color:STRING)
-	-- Initialise `Current'
+	-- Initialise `current'
 		require
 			a_screen_is_not_null: not a_screen.is_default_pointer
 		local
@@ -43,23 +43,6 @@ feature {GAME} -- Constructeur
 			alpha_value := 255
 		end
 
-feature {GAME} -- Affichage
-
-	set_transparancy (a_value:NATURAL_8)
-	-- Applique la transparence
-		require
-			a_value_is_at_least_0: a_value >= 0
-		do
-			alpha_value := a_value
-		end
-
-	apply
-	-- Applique l'image à `screen'
-		do
-			apply_transparancy (alpha_value)
-			apply_surface_to_screen
-		end
-
 feature {GAME} -- Coordonnées de l'emplacement
 
 	change_position (a_x, a_y:INTEGER_16)
@@ -71,10 +54,5 @@ feature {GAME} -- Coordonnées de l'emplacement
 			set_x (a_x)
 			set_y (a_y)
 		end
-
-feature {NONE} -- Variables de classe
-
-	alpha_value:NATURAL_8
-	-- Valeur alpha utilisée lors de la transparence
 
 end

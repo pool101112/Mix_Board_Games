@@ -152,10 +152,6 @@ feature {NONE} -- Jeux
 					if quit_requested (l_event_ptr) then
 						l_quit := true
 					elseif click (l_event_ptr) then
-						print ("Your move is starting... ")
-						io.put_new_line
-						print ("------------------------ ")
-						io.put_new_line
 						if l_white_player_turn then
 							l_color := "w"
 						else
@@ -167,41 +163,49 @@ feature {NONE} -- Jeux
 								l_valid_move := true
 								l_next_piece := is_valid_move (l_game_board, l_board_square, l_white_player_turn, -1, -8)
 								change_pieces_color (l_game_board, l_board_square, l_next_piece, -1, -8, l_color, l_pieces_list, a_screen)
+								apply_refresh_test (l_pieces_list, a_screen)
 							end
 							if is_valid_move (l_game_board, l_board_square, l_white_player_turn, -1, 0) >= 0 then
 								l_valid_move := true
 								l_next_piece := is_valid_move (l_game_board, l_board_square, l_white_player_turn, -1, 0)
 								change_pieces_color (l_game_board, l_board_square, l_next_piece, -1, 0, l_color, l_pieces_list, a_screen)
+								apply_refresh_test (l_pieces_list, a_screen)
 							end
 							if is_valid_move (l_game_board, l_board_square, l_white_player_turn, -1, 8) >= 0 then
 								l_valid_move := true
 								l_next_piece := is_valid_move (l_game_board, l_board_square, l_white_player_turn, -1, 8)
 								change_pieces_color (l_game_board, l_board_square, l_next_piece, -1, 8, l_color, l_pieces_list, a_screen)
+								apply_refresh_test (l_pieces_list, a_screen)
 							end
 							if is_valid_move (l_game_board, l_board_square, l_white_player_turn, 0, -8) >= 0 then
 								l_valid_move := true
 								l_next_piece := is_valid_move (l_game_board, l_board_square, l_white_player_turn, 0, -8)
 								change_pieces_color (l_game_board, l_board_square, l_next_piece, 0, -8, l_color, l_pieces_list, a_screen)
+								apply_refresh_test (l_pieces_list, a_screen)
 							end
 							if is_valid_move (l_game_board, l_board_square, l_white_player_turn, 0, 8) >= 0 then
 								l_valid_move := true
 								l_next_piece := is_valid_move (l_game_board, l_board_square, l_white_player_turn, 0, 8)
 								change_pieces_color (l_game_board, l_board_square, l_next_piece, 0, 8, l_color, l_pieces_list, a_screen)
+								apply_refresh_test (l_pieces_list, a_screen)
 							end
 							if is_valid_move (l_game_board, l_board_square, l_white_player_turn, 1, -8) >= 0 then
 								l_valid_move := true
 								l_next_piece := is_valid_move (l_game_board, l_board_square, l_white_player_turn, 1, -8)
 								change_pieces_color (l_game_board, l_board_square, l_next_piece, 1, -8, l_color, l_pieces_list, a_screen)
+								apply_refresh_test (l_pieces_list, a_screen)
 							end
 							if is_valid_move (l_game_board, l_board_square, l_white_player_turn, 1, 0) >= 0 then
 								l_valid_move := true
 								l_next_piece := is_valid_move (l_game_board, l_board_square, l_white_player_turn, 1, 0)
 								change_pieces_color (l_game_board, l_board_square, l_next_piece, 1, 0, l_color, l_pieces_list, a_screen)
+								apply_refresh_test (l_pieces_list, a_screen)
 							end
 							if is_valid_move (l_game_board, l_board_square, l_white_player_turn, 1, 8) >= 0 then
 								l_valid_move := true
 								l_next_piece := is_valid_move (l_game_board, l_board_square, l_white_player_turn, 1, 8)
 								change_pieces_color (l_game_board, l_board_square, l_next_piece, 1, 8, l_color, l_pieces_list, a_screen)
+								apply_refresh_test (l_pieces_list, a_screen)
 							end
 
 							if l_valid_move then
@@ -217,9 +221,6 @@ feature {NONE} -- Jeux
 							print ("Occupied")
 							io.put_new_line
 						end
-						print ("Your move is done!")
-						print ("||||||||||||||||||")
-						io.put_new_line
 					end
 				end
 				l_game_board.apply
@@ -246,6 +247,24 @@ feature {NONE} -- Jeux
 					end
 				l_i := l_i + 1
 			end
+		end
+
+	apply_refresh_test (l_pieces_list:ARRAYED_LIST[REVERSI_PIECE]; a_screen:POINTER)
+	-- to delete as soon as possible
+		local
+			l_i:INTEGER_8
+		do
+			from
+				l_i := 1
+			until
+				l_i > l_pieces_list.count
+			loop
+				if l_pieces_list[l_i] /= void then
+					l_pieces_list[l_i].apply
+				end
+				l_i := l_i + 1
+			end
+			refresh_screen (a_screen)
 		end
 
 feature {NONE} -- Autres
@@ -335,6 +354,15 @@ feature {NONE} -- Cases valides
 				until
 					result > -2
 				loop
+					if a_x = 1 then
+						if l_board_square \\ 8 = 0 then
+							result := -1
+						end
+					elseif a_x = -1 then
+						if l_board_square \\ 8 = 1 then
+							result := -1
+						end
+					end
 					l_board_square := l_board_square + a_x + a_y
 					if l_board_square < 1 or l_board_square > 64 then
 						result := -1
@@ -343,15 +371,15 @@ feature {NONE} -- Cases valides
 					elseif a_board_game.occupied_squares_list[l_board_square].is_equal ("none") then
 						result := -1
 					end
-					if a_x = 1 and a_y = 0 then
-						if l_board_square > l_x_limit then
-							result := -1
-						end
-					elseif a_x = -1 and a_y = 0 then
-						if l_board_square < l_x_limit then
-							result := -1
-						end
-					end
+--					if a_x = 1 and a_y = 0 then
+--						if l_board_square > l_x_limit then
+--							result := -1
+--						end
+--					elseif a_x = -1 and a_y = 0 then
+--						if l_board_square < l_x_limit then
+--							result := -1
+--						end
+--					end
 				end
 			end
 		end
@@ -367,14 +395,9 @@ feature {NONE} -- Cases valides
 		until
 			l_board_square = a_board_final_square
 		loop
-			print ("Going to destroy square " + (l_board_square - 1).out + "... ")
 			a_pieces_list[l_board_square].destroy
-			print ("Done! Creating new piece... ")
 			a_pieces_list[l_board_square] := (create {REVERSI_PIECE}.make (a_screen, l_board_square - 1, a_game_board, true, a_color))
-			print ("Done! Changing datas... ")
 			a_game_board.occupied_squares_list[l_board_square] := a_color
-			print ("Done!")
-			io.put_new_line
 			l_board_square := l_board_square + a_x + a_y
 		end
 	end

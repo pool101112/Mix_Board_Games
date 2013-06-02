@@ -17,7 +17,7 @@ create
 feature {GAME} -- Constructeur
 
 	make (a_screen:POINTER; a_path_list:LIST[STRING]; a_x, a_y:INTEGER_16)
-	-- Initialise `Current'
+	-- Initialise `current'
 		require
 			a_screen_is_not_null: not a_screen.is_default_pointer
 			a_path_list_is_not_empty: not a_path_list.is_empty
